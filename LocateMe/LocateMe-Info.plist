@@ -40,5 +40,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NOTUSED_NSLocationWhenInUseUsageDescription</key>
+	<string>Location is required to find out where you are. No personal data is stored or sent without your consent.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Location is required to find out where you are. No personal data is stored or sent without your consent.</string>
 </dict>
 </plist>

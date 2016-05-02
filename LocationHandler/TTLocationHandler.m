@@ -110,6 +110,15 @@ static const double WALK_DISTANCE_FILTER = 10.00;
       
       // Start up the location manager
       self.locationManager = [[CLLocationManager alloc] init];
+
+      // Request Authorization set NSLocationAlwaysUsageDescription on Info.plist
+      if ([self.locationManager respondsToSelector:@selector(requestAlwaysAuthorization)]) {
+          [self.locationManager requestAlwaysAuthorization];
+      }
+      if ([CLLocationManager authorizationStatus] != kCLAuthorizationStatusAuthorizedAlways) {
+          NSLog(@"Auhorization Error");
+      }
+      
       self.locationManager.delegate = self;
       self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;
       self.locationManager.distanceFilter = DEFAULT_DISTANCE_FILTER;
@@ -282,7 +291,7 @@ static const double WALK_DISTANCE_FILTER = 10.00;
 
 - (BOOL)registerNotificationForLocation:(CLLocation *)myLocation withRadius:(NSNumber *)myRadius assignIdentifier:(NSString *)identifier {
     // Do not create regions if support is unavailable or disabled.
-    if ( ![CLLocationManager regionMonitoringAvailable]) {
+    if ( ![CLLocationManager isMonitoringAvailableForClass:[CLRegion class]]) {
         return NO;
     }
     
@@ -296,8 +305,7 @@ static const double WALK_DISTANCE_FILTER = 10.00;
     CLLocationCoordinate2D theCoordinate = myLocation.coordinate;
     
     // Create the region and start monitoring it.
-    CLRegion* theRegion = [[CLRegion alloc] initCircularRegionWithCenter:theCoordinate
-                                                               radius:theRadius identifier:identifier];
+    CLCircularRegion* theRegion = [[CLCircularRegion alloc] initWithCenter:theCoordinate radius:theRadius identifier:identifier];
     [self.locationManager startMonitoringForRegion:theRegion];
     if (OUTPUT_LOGS) NSLog(@"Registered Region");
     return YES;
@@ -320,9 +328,7 @@ static const double WALK_DISTANCE_FILTER = 10.00;
  */
 -(CLRegion *)currentRegionWithRadius:(CLLocationDistance)radius {
     CLLocation *workingLocation = [self.lastKnownLocation copy];
-    CLRegion *theRegion = [[CLRegion alloc] initCircularRegionWithCenter:workingLocation.coordinate 
-                                                                  radius:radius 
-                                                              identifier:@"currentRegion"];
+    CLCircularRegion* theRegion = [[CLCircularRegion alloc] initWithCenter:workingLocation.coordinate radius:radius identifier:@"currentRegion"];
     return theRegion;
 }
 
@@ -444,7 +450,7 @@ static const double WALK_DISTANCE_FILTER = 10.00;
         
         [self _saveLocationAndNotifyObservers:[_pendingLocationsQueue lastObject]];
         
-        if (OUTPUT_LOGS) NSLog(@"Time limit reached, no better location came in. Accepted location %i",_pendingLocationsQueue.count);
+        if (OUTPUT_LOGS) NSLog(@"Time limit reached, no better location came in. Accepted location %li",_pendingLocationsQueue.count);
         
         [_pendingLocationsQueue removeAllObjects];
             
@@ -621,15 +627,15 @@ static const double WALK_DISTANCE_FILTER = 10.00;
     UIApplication *app = [UIApplication sharedApplication];
     if ([active boolValue]) {
         if (existingLocationIsAccurate) {
-            [app setStatusBarStyle:UIStatusBarStyleBlackTranslucent animated:YES];
+            [app setStatusBarStyle:UIStatusBarStyleLightContent animated:YES]; // UIStatusBarStyleBlackTranslucent
         } else {
-            [app setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
+            [app setStatusBarStyle:UIStatusBarStyleDefault animated:YES]; // UIStatusBarStyleBlackOpaque
         }
     } else {
         if (existingLocationIsAccurate) {
-            [app setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+            [app setStatusBarStyle:UIStatusBarStyleLightContent animated:YES];
         } else {
-            [app setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
+            [app setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
         }
     }
 }
