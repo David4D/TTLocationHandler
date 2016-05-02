@@ -52,7 +52,7 @@
 
 -(void)storeMostRecentLocationInfo
 {
-    static int locationIndex = 0;
+    static NSInteger locationIndex = 0;
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSDictionary *lastKnowLocationInfo = [defaults objectForKey:@"LAST_KNOWN_LOCATION"];
@@ -61,10 +61,10 @@
     }
     
     // store the location info
-    NSString *theKey = [NSString stringWithFormat:@"location%i", locationIndex];
+    NSString *theKey = [NSString stringWithFormat:@"location%li", locationIndex];
     [defaults setObject:[NSDictionary dictionaryWithDictionary:lastKnowLocationInfo] forKey:theKey];
     
-    int numberOfPinsSaved = [defaults integerForKey:@"NUMBER_OF_PINS_SAVED"];
+    NSInteger numberOfPinsSaved = [defaults integerForKey:@"NUMBER_OF_PINS_SAVED"];
     
     if (locationIndex == numberOfPinsSaved) {
         locationIndex = 0;

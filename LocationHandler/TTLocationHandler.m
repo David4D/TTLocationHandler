@@ -390,14 +390,14 @@ static const double WALK_DISTANCE_FILTER = 10.00;
                 _pendingLocationsTimer = nil;
                 [self _saveLocationAndNotifyObservers:[_pendingLocationsQueue lastObject]];
                 
-                if (OUTPUT_LOGS) NSLog(@"Location attempts limit reached, accepted location %i",_pendingLocationsQueue.count);
+                if (OUTPUT_LOGS) NSLog(@"Location attempts limit reached, accepted location %li",_pendingLocationsQueue.count);
                 
                 [_pendingLocationsQueue removeAllObjects];
             } else {
                 // It's not within our requested accuracy preference and we haven't reached limit of tries
                 // save to the queue and see if we get a better one before our set wait time expiration.
                 [_pendingLocationsQueue addObject:[locationToTest copy]];
-                if (OUTPUT_LOGS) NSLog(@"Location %i queued for possible acceptance",_pendingLocationsQueue.count);
+                if (OUTPUT_LOGS) NSLog(@"Location %li queued for possible acceptance",_pendingLocationsQueue.count);
                 
                 // set up a timer to limit how long we'll wait before taking what we have.
                 [_pendingLocationsTimer invalidate];

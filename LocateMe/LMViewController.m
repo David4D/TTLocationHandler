@@ -66,7 +66,7 @@
     TTLocationHandler *sharedHandler = [TTLocationHandler sharedLocationHandler];
     NSInteger interval = sharedHandler.recencyThreshold;
     self.refreshIntervalStepper.value = interval;
-    self.refreshIntervalField.text = [NSString stringWithFormat:@"%i sec",interval];
+    self.refreshIntervalField.text = [NSString stringWithFormat:@"%li sec",interval];
     
     self.backgroundToggleSwitch.on = sharedHandler.continuesUpdatingOnBattery;
     _currentWalkMode = sharedHandler.walkMode;
@@ -134,11 +134,11 @@
 -(void)updateLocationsArray
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    int numberOfPins = [defaults integerForKey:@"NUMBER_OF_PINS_SAVED"];
+    NSInteger numberOfPins = [defaults integerForKey:@"NUMBER_OF_PINS_SAVED"];
     NSMutableArray *mArray = [NSMutableArray arrayWithCapacity:numberOfPins];
     
-    for (int index = 0; index < numberOfPins; index++) {
-        NSString *theKey = [NSString stringWithFormat:@"location%i", index];
+    for (NSInteger index = 0; index < numberOfPins; index++) {
+        NSString *theKey = [NSString stringWithFormat:@"location%li", index];
         NSDictionary *savedDict = [defaults objectForKey:theKey];
         
         if (savedDict) {
@@ -147,7 +147,7 @@
             CLLocationDegrees Long = [[savedDict valueForKey:@"LONGITUDE"] doubleValue];
             CLLocationCoordinate2D theCoordinate = CLLocationCoordinate2DMake(lat, Long);
             theAnnotation.coordinate = theCoordinate;
-            theAnnotation.title = [NSString stringWithFormat:@"Location%i", index];
+            theAnnotation.title = [NSString stringWithFormat:@"Location%li", index];
             
             [mArray addObject:theAnnotation];
         }
@@ -159,10 +159,10 @@
 -(void)clearStoredLocations
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    int numberOfPins = [defaults integerForKey:@"NUMBER_OF_PINS_SAVED"];
+    NSInteger numberOfPins = [defaults integerForKey:@"NUMBER_OF_PINS_SAVED"];
     
-    for (int counter = 0; counter < numberOfPins; counter++) {
-        NSString *key = [NSString stringWithFormat:@"location%i",counter];
+    for (NSInteger counter = 0; counter < numberOfPins; counter++) {
+        NSString *key = [NSString stringWithFormat:@"location%li",counter];
         [defaults removeObjectForKey:key];
     }
 }
